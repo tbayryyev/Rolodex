@@ -8,8 +8,10 @@ public class Rolodex {
 
 	// Constructor
 	Rolodex() {
+	     // an initial array to keep all 26 seperators since there are 26 letters in the alphabet
 	    index = new Entry[26];
-				
+		
+	    // using ascii to create the different letter Separators		
 	    for (int i=0; i<26; i++){
 	    	if (i == 0) {
 	    		index[i] = new Separator(null,null,(char)65);
@@ -20,6 +22,7 @@ public class Rolodex {
 	    		index[i] = new Separator(null, null,(char) (65+i));
 	    	}
 	    }
+		// linking all the separators together to form a linked list
 	    for (int i = 0; i <26; i++) {
 	    	if (i == 0) {
 	    		index[i].next = index[1];
@@ -34,7 +37,7 @@ public class Rolodex {
 	    	}
 	    }
 	}
-	
+	// helper function to get the next separator
 	private Entry nextSep(String name) {
 		int c = name.charAt(0) -65;
 		Entry nextSep;
@@ -47,6 +50,8 @@ public class Rolodex {
 		return nextSep;
 		
 	}
+	
+	// goes through the linked list an determines whether the rolodex contains the given input parameter name
 	public Boolean contains(String name) {
 		int c = name.charAt(0) -65;
 		if (c>25 || c<0) {
@@ -62,7 +67,7 @@ public class Rolodex {
 		}
 		return current != nextSep(name);
 	}
-	
+	// returns the size of the rolodex only cards are counted, separators do not count
 	public int size() {
 		int count = 0;
 		Entry current = index[0];
@@ -75,6 +80,9 @@ public class Rolodex {
 		}
 		return count;
 	}
+	
+	//returns an ArrayList with all the cellphones of name (in the order in which they occur in the Rolodex)
+	//If name is not in the Rolodex, then an IllegalArgumentException with the message "lookup: name not found" is thrown
 	public ArrayList<String> lookup(String name) {
 		if(!contains(name)) {
 	    	throw new IllegalArgumentException("lookup: name not found");
@@ -91,6 +99,7 @@ public class Rolodex {
 		    }
 		return l;
 	}
+	// toString method to visualize the rolodex 
 	public String toString() {
 		Entry current = index[0];
 
@@ -102,6 +111,9 @@ public class Rolodex {
 		b.append(current.toString()+"\n");		
 		return b.toString();
 	}
+	
+	// method adds a new card with the specified infor-mation to the Rolodex 
+	// If the card already exists (with the same name and cell), then a IllegalArgumentException with the message "addCard: duplicate entry" is thrown
 	public void addCard(String name, String cell) {
 		int c = name.charAt(0) -65;
 		
@@ -142,6 +154,9 @@ public class Rolodex {
 		}
 		
 	}
+	//removes the specified card
+	//throws an IllegalArgumentException with message "removeCard: name does not exist" if there is not card for that name
+	// If there is a card with that name but with a different cell-phone number, it throws an IllegalArgumentException with the message "removeCard: cell for that name does not exist"
 	public void removeCard(String name, String cell) {
 		
 		if(!contains(name)) {
@@ -170,6 +185,9 @@ public class Rolodex {
 		}
 
 	}
+	
+	//removes all cards for name
+	//Throws anIllegalArgumentException with message "removeAllCards: name does not exist" if the name is not in the Rolodex
 	public void removeAllCards(String name) {
 		if(!contains(name)) {
 			throw new IllegalArgumentException("removeAllCards: name does not exist");
@@ -184,19 +202,23 @@ public class Rolodex {
 	}
 
 	// Cursor operations
-
+	
+	// sets the cursor field to the separator for “A”
 	public void initializeCursor() {
 		cursor = index[0];
 	}
+	//moves cursor to the next separator
 	public void nextSeparator() {
 		cursor = cursor.next;
 		while(!cursor.isSeparator()) {
 			cursor = cursor.next;
 		}
 	}
+	//moves cursor to the next entry, which could be card or a separator
 	public void nextEntry() {
 		cursor = cursor.next;
 	}
+	//returns the string representation of the current entry pointed to by the cursor
 	public String currentEntryToString() {
 		return cursor.toString();
 	}
